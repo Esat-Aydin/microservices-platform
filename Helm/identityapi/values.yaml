@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: ecomacrnet9.azurecr.io/identity
+  tag: "latest"
+  pullPolicy: Always
+
+env:
+  ASPNETCORE_ENVIRONMENT: "Development"
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8080
+
+secret:
+  name: identity-secrets
+  connectionKey: identityConnectionString
+  jwtKey: jwtKey
+
+# NEW + FIXED — correct SQL Server for Identity
+identityConnectionString: "Server=sqlserver-identity.ecommerce.svc.cluster.local,1433;Database=IdentityDb;User Id=sa;Password=IdentityStrongPassword123!;TrustServerCertificate=True;"
+
+jwt:
+  issuer: "ecommerce.identity"
+  audience: "ecommerce.clients"
+  duration: "60"
